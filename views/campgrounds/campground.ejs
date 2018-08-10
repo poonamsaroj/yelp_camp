@@ -1,0 +1,24 @@
+<% include ../partials/header %>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Welcome to YelpCamp!</h1> 
+            <p>See all the famour campground.</p> 
+            <form method="GET" action="campground/new">
+                <button class="btn btn-primary btn-lg">Add campgrounds</button>
+            </form>
+        </div>
+        <div class="row" style="display:flex;flex-wrap:wrap;">
+            <% arrVal.forEach(function(arr){  %>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src='<%= arr['image']; %>'>
+                        <div class="caption text-center">
+                            <h5><%= arr['name'];  %></h5>
+                            <a class="btn btn-sm btn-info" href="<%= "/campground/" + arr['_id'] %>">More Info</a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+<% include ../partials/footer %>

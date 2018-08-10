@@ -1,0 +1,35 @@
+<% include ../partials/header %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Yelp Camp</h3>
+                <div class="list-group" id="list-tab" role="tablist">
+                  <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Category 1</a>
+                  <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Category 2</a>
+                  <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Category 3</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="thumbnail">
+                    <img src='<%= selectedid['image']; %>'  class="img-responsive">
+                    <div class="caption-full">
+                        <a href="#" class=""><%= selectedid['name'];  %></a>
+                        <a href="#" class="pull-right">$9 per/day</a>
+                        <h6><%= selectedid['description'];  %></h6>
+                    </div>
+                </div>
+                <div class="well">
+                    <div class="text-right">
+                        <a href="/campground/<%= selectedid['_id'] %>/comments" class="btn btn-sm btn-info">Add New Comment</a>
+                    </div>
+                    <hr>
+                    <% selectedid.comments.forEach(function(select){ %>
+                    <h5><strong> <%= select['author'] %> </strong><span class="pull-right"> 10 days ago</span> </h5>
+                    <h6><%= select['text'];  %> </h6>
+                    <% }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% include ../partials/footer %>
