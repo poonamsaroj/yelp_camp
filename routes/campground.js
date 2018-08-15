@@ -1,10 +1,8 @@
 var express = require('express');
+var methodOverride = require("method-override");
 var campground = require('../models/campground');
 var comments = require('../models/comment');
 var router = express.Router({ mergeParams: true });
-//ROUTE IN ROOT DIRECTORY
-
-
 
 //ROUTE IF PERSON TRIES TO ACCESS ALL CAMPGROUNDS
 
@@ -21,7 +19,7 @@ router.get('/', isLoggedIn, function (req, res) {
 
 //ROUTE IF PERSON TRIES TO SUBMIT IMAGE NAME AND URL OF THE IMAGE
 
-router.post('/',isLoggedIn, function (req, res) {
+router.post('/', isLoggedIn, function (req, res) {
     //console.log('inside');
     var nameVal = req.body.value;
     var urlVal = req.body.url;
@@ -31,6 +29,7 @@ router.post('/',isLoggedIn, function (req, res) {
     //             name: nameVal,
     //             url: urlVal
     //         });
+    // console.log(req.user.username);
     var dataArr = {name: nameVal, url: urlVal};
     campground.create(dataArr, function(err, newlycreate){
         if(err){
@@ -38,6 +37,9 @@ router.post('/',isLoggedIn, function (req, res) {
             console.log(err);
         }else{
             // console.log('inside else here');
+            newlycreate.author.id = req.user._id;
+            newlycreate.author.username = req.user.username;
+            newlycreate.save();
             res.redirect('campground');
         }
     });
@@ -51,7 +53,7 @@ router.get('/new',isLoggedIn, function (req, res) {
 
 //ROUTE IF PERSON TRIES TO SEE MORE ABOUT CAMPGROUNDS
 
-router.get('/:id',isLoggedIn, function (req, res) {
+router.get('/:id', function (req, res) {
     var id = req.params.id;
     // res.send(_id);
     campground.findById(id).populate("comments").exec(function(err, selectedids){
@@ -65,13 +67,87 @@ router.get('/:id',isLoggedIn, function (req, res) {
     });
 });
 
+//ROUTE IF PERSON TRIES TO SEE MORE ABOUT CAMPGROUNDS
+
+router.get('/:id/edit', checkAuthtoedit, function (req, res) {
+    campground.findById(req.params.id,function(err, camp){
+        if(err){
+            console.log(err);
+        }else{
+            //console.log(camp);
+           res.render('campgrounds/edit',{camp: camp});
+        }
+    });
+});
+
+//ROUTE IF PERSON TRIES TO SEE MORE ABOUT CAMPGROUNDS
+
+router.post('/:id/edit', function (req, res) {
+    //console.log(req.body);
+    campground.findByIdAndUpdate(req.params.id,{$set:req.body},function(err, camp){
+        if(err){
+            console.log(err);
+        }else{
+          //console.log(camp);
+          res.redirect("/campground/" + req.params.id);
+        }
+    });
+});
+
+router.get('/:id/delete', checkAuthtodelete,function (req, res) {
+    // campground.findByIdAndRemove(req.params.id,function(err, camp){
+    //     if(err){
+    //         console.log(err);
+    //     }else{
+    //       res.redirect("/campground/");
+    //     }
+    // });
+});
+
 //ISLOGGEDIN MIDDLEWARE
-function isLoggedIn(req,res,next){
+function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();
     }else{
         res.redirect("/login");
     }
+}
+
+function checkAuthtoedit(req, res, next){
+    campground.findById(req.params.id,function(err, camp){
+        if(req.isAuthenticated()){
+            var id = camp.author.id;
+            var loggedid = req.user.id;
+            if(id.equals(loggedid)){
+               res.render('campgrounds/edit',{camp: camp});      
+            }else{
+                console.log('not mathched');
+            }
+        }else{
+            res.send("back");
+        }
+    });
+}
+function checkAuthtodelete(req, res, next){
+    campground.findById(req.params.id,function(err, camp){
+        if(req.isAuthenticated()){
+            var id = camp.author.id;
+            var loggedid = req.user.id;
+            if(id.equals(loggedid)){
+               campground.findByIdAndRemove(req.params.id,function(err, camp){
+                    if(err){
+                        console.log(err);
+                    }else{
+                      res.redirect("/campground/");
+                    }
+                });     
+            }else{
+                console.log('not mathched');
+            }
+        }else{
+            res.send("back");
+        }
+    });
 }
 
 module.exports = router;

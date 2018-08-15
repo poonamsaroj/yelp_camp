@@ -31,8 +31,11 @@ router.post('/add',isLoggedIn, function (req, res) {
                 if(err){
                     console.log(err);
                 }else{
-                    // console.log(comment);
+                    comment.author.id = req.user._id; 
+                    comment.author.username = req.user.username;     // WHY IS THIS EVEN WORKING
+                    //console.log(campground.username);
                     //push and save saves the objectID
+                    comment.save();
                     camp.comments.push(comment);
                     camp.save();
                     res.redirect("/campground/" + camp["_id"]);

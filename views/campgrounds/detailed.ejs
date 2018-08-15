@@ -11,11 +11,14 @@
             </div>
             <div class="col-md-9">
                 <div class="thumbnail">
-                    <img src='<%= selectedid['image']; %>'  class="img-responsive">
+                    <img src='<%= selectedid['url']; %>' class="img-responsive">
                     <div class="caption-full">
                         <a href="#" class=""><%= selectedid['name'];  %></a>
                         <a href="#" class="pull-right">$9 per/day</a>
                         <h6><%= selectedid['description'];  %></h6>
+                        <h6>Submitted By: <%= selectedid['author']['username']; %></h6>
+                        <a href="<%= selectedid['_id'];  %>/edit" class="btn btn-info">Edit</a>
+                        <a href="<%= selectedid['_id'];  %>/delete" class="btn btn-warning">Delete</a>
                     </div>
                 </div>
                 <div class="well">
@@ -23,9 +26,9 @@
                         <a href="/campground/<%= selectedid['_id'] %>/comments" class="btn btn-sm btn-info">Add New Comment</a>
                     </div>
                     <hr>
-                    <% selectedid.comments.forEach(function(select){ %>
-                    <h5><strong> <%= select['author'] %> </strong><span class="pull-right"> 10 days ago</span> </h5>
-                    <h6><%= select['text'];  %> </h6>
+                    <% selectedid.comments.forEach(function(select){  %>
+                    <h5><strong> <%= select.author.username %> </strong><span class="pull-right"> 10 days ago</span> </h5>
+                    <h6><%= select.text;  %> </h6>
                     <% }) %>
                     </div>
                 </div>

@@ -11,7 +11,7 @@
             <% arrVal.forEach(function(arr){  %>
                 <div class="col-md-3 col-sm-6">
                     <div class="thumbnail">
-                        <img src='<%= arr['image']; %>'>
+                        <img src='<%= arr['url']; %>'>
                         <div class="caption text-center">
                             <h5><%= arr['name'];  %></h5>
                             <a class="btn btn-sm btn-info" href="<%= "/campground/" + arr['_id'] %>">More Info</a>

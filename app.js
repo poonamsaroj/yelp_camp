@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require("body-parser");
+var methodOverride = require("method-override");
 var indexRoute = require('./routes/index');
 var campgroundRoute = require('./routes/campground');
 var commentRoute = require('./routes/comment');
@@ -12,7 +13,8 @@ var passportLocal = require("passport-local");
 var passportlocalmongoose = require("passport-local-mongoose");
 var seedDB = require('./seed');
 var app = express();
-seedDB();
+
+//seedDB();
 
 // MAKE A CONNECTION WITH MONGODB
 
